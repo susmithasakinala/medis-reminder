@@ -530,7 +530,7 @@ function loadHomeScreen() {
         
         return `
             <div class="medicine-card">
-                <img src="${medicine.photoData || 'assets/placeholder.svg'}" alt="${medicine.name}">
+                <img src="${medicine.photoData || 'placeholder.svg'}" alt="${medicine.name}">
                 <div class="medicine-card-content">
                     <div class="medicine-card-name">${medicine.name}</div>
                     <div class="medicine-card-dosage">${medicine.dosageAmount} ${medicine.dosageUnit}</div>
@@ -593,7 +593,7 @@ function loadMedicinesList() {
     container.innerHTML = medicines.map(medicine => `
         <div class="medicines-list-item">
             <div class="medicine-item-content">
-                <img src="${medicine.photoData || 'assets/placeholder.svg'}" alt="${medicine.name}" class="medicine-item-img">
+                <img src="${medicine.photoData || 'placeholder.svg'}" alt="${medicine.name}" class="medicine-item-img">
                 <div class="medicine-item-details">
                     <h3>${medicine.name}</h3>
                     <p>${medicine.dosageAmount} ${medicine.dosageUnit}</p>
@@ -747,7 +747,7 @@ function handleAddMedicine(e) {
         endDate: document.getElementById('endDate').value,
         frequency: selectedFrequency,
         notes: document.getElementById('notes').value,
-        photoData: window.medicinePhotoData || 'assets/placeholder.svg'
+        photoData: window.medicinePhotoData || 'placeholder.svg'
     };
     
     // Add frequency-specific data
@@ -777,7 +777,7 @@ function handleAddMedicine(e) {
 
 function resetForm() {
     document.getElementById('addMedicineForm').reset();
-    document.getElementById('medicinePreview').src = 'assets/placeholder.svg';
+    document.getElementById('medicinePreview').src = 'placeholder.svg';
     window.medicinePhotoData = null;
     selectedFrequency = null;
     selectedDays = [];
@@ -1230,3 +1230,4 @@ window.addEventListener('load', () => {
     if (settings.largeText) document.body.classList.add('large-text');
     if (settings.highContrast) document.body.classList.add('high-contrast');
 });
+
