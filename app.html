@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Guardian - Smart Medication Management</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- App Header with Back Button -->
+        <div class="app-header">
+            <button class="back-to-dashboard" onclick="goToDashboard()" title="Back to Dashboard">
+                ← Dashboard
+            </button>
+            <h2>Health Guardian</h2>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Home Screen -->
+            <section id="home-screen" class="screen active">
+                <div class="screen-header">
+                    <h1>Today's Medicines</h1>
+                    <p id="today-date"></p>
+                </div>
+                <div class="medicines-today" id="medicinesToday">
+                    <div class="empty-state">
+                        <p>📋 No medicines scheduled for today</p>
+                    </div>
+                </div>
+                <button class="fab-button" onclick="navigateTo('add-medicine')">
+                    <span>+</span>
+                </button>
+                <!-- Debug: Manual Reminder Test -->
+                <div style="text-align: center; margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 8px; display: none;" id="debugReminder">
+                    <button class="btn-secondary" onclick="testReminderManual()" style="font-size: 12px; padding: 8px 15px;">🧪 Test Reminder (Debug)</button>
+                    <p style="font-size: 11px; color: #999; margin-top: 5px;">Click to manually trigger a test reminder</p>
+                </div>
+            </section>
+
+            <!-- Medicines List Screen -->
+            <section id="medicines-screen" class="screen">
+                <div class="screen-header">
+                    <h1>My Medicines</h1>
+                </div>
+                <div class="medicines-list" id="medicinesList">
+                    <div class="empty-state">
+                        <p>💊 No medicines added yet</p>
+                    </div>
+                </div>
+                <button class="fab-button" onclick="navigateTo('add-medicine')">
+                    <span>+</span>
+                </button>
+            </section>
+
+            <!-- Add Medicine Screen -->
+            <section id="add-medicine-screen" class="screen">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="navigateTo('medicines')">← Back</button>
+                    <h1>Add Medicine</h1>
+                </div>
+                <form id="addMedicineForm" class="medicine-form">
+                    <!-- Photo Upload -->
+                    <div class="form-group">
+                        <label>Medicine Photo</label>
+                        <div class="photo-upload">
+                            <img id="medicinePreview" src="assets/placeholder.svg" alt="Medicine Photo">
+                            <input type="file" id="medicinePhoto" accept="image/*" onchange="previewPhoto(this)">
+                            <button type="button" class="btn-upload" onclick="document.getElementById('medicinePhoto').click()">
+                                📷 Upload Photo
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Medicine Name -->
+                    <div class="form-group">
+                        <label for="medicineName">Medicine Name *</label>
+                        <input type="text" id="medicineName" placeholder="e.g., Aspirin" required>
+                    </div>
+
+                    <!-- Dosage -->
+                    <div class="form-group">
+                        <label for="dosage">Dosage *</label>
+                        <div class="dosage-input">
+                            <input type="number" id="dosageAmount" placeholder="Amount" min="0.1" step="0.1" required>
+                            <select id="dosageUnit" required>
+                                <option value="">Unit</option>
+                                <option value="mg">mg (Milligrams)</option>
+                                <option value="ml">ml (Milliliters)</option>
+                                <option value="tablet">Tablet(s)</option>
+                                <option value="capsule">Capsule(s)</option>
+                                <option value="drop">Drop(s)</option>
+                                <option value="spray">Spray</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Intake Instruction -->
+                    <div class="form-group">
+                        <label for="intakeInstruction">Intake Instruction *</label>
+                        <select id="intakeInstruction" required>
+                            <option value="">Select instruction</option>
+                            <option value="before-meal">Before Meal</option>
+                            <option value="after-meal">After Meal</option>
+                            <option value="with-meal">With Meal</option>
+                            <option value="empty-stomach">Empty Stomach</option>
+                            <option value="anytime">Anytime</option>
+                        </select>
+                    </div>
+
+                    <!-- Intake Time -->
+                    <div class="form-group">
+                        <label for="intakeTime">Intake Time *</label>
+                        <input type="time" id="intakeTime" required>
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="form-group">
+                        <label for="startDate">Start Date *</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="form-group">
+                        <label for="endDate">End Date (Leave empty if ongoing)</label>
+                        <input type="date" id="endDate">
+                    </div>
+
+                    <!-- Frequency Selection -->
+                    <div class="form-group">
+                        <label>Frequency *</label>
+                        <div class="frequency-options">
+                            <button type="button" class="freq-btn" data-freq="daily" onclick="selectFrequency('daily')">Daily</button>
+                            <button type="button" class="freq-btn" data-freq="weekly" onclick="selectFrequency('weekly')">Weekly</button>
+                            <button type="button" class="freq-btn" data-freq="monthly" onclick="selectFrequency('monthly')">Monthly</button>
+                            <button type="button" class="freq-btn" data-freq="custom" onclick="selectFrequency('custom')">Custom Cycle</button>
+                        </div>
+                        <input type="hidden" id="frequency" required>
+                    </div>
+
+                    <!-- Weekly Days (for weekly frequency) -->
+                    <div id="weeklyDays" class="form-group hidden">
+                        <label>Select Days</label>
+                        <div class="days-selector">
+                            <button type="button" class="day-btn" data-day="0">Sun</button>
+                            <button type="button" class="day-btn" data-day="1">Mon</button>
+                            <button type="button" class="day-btn" data-day="2">Tue</button>
+                            <button type="button" class="day-btn" data-day="3">Wed</button>
+                            <button type="button" class="day-btn" data-day="4">Thu</button>
+                            <button type="button" class="day-btn" data-day="5">Fri</button>
+                            <button type="button" class="day-btn" data-day="6">Sat</button>
+                        </div>
+                        <input type="hidden" id="selectedDays">
+                    </div>
+
+                    <!-- Custom Cycle (for custom frequency) -->
+                    <div id="customCycle" class="form-group hidden">
+                        <label for="intakeDays">Intake Days (e.g., 1 day) *</label>
+                        <input type="number" id="intakeDays" min="1" placeholder="Number of days to take">
+                        
+                        <label for="pauseDays">Pause Days (e.g., 2 days) *</label>
+                        <input type="number" id="pauseDays" min="0" placeholder="Number of days to pause">
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="form-group">
+                        <label for="notes">Additional Notes</label>
+                        <textarea id="notes" placeholder="e.g., Store in cool place, take with water..."></textarea>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-primary">Add Medicine</button>
+                </form>
+            </section>
+
+            <!-- Daily Progress Screen -->
+            <section id="progress-screen" class="screen">
+                <div class="screen-header">
+                    <h1>My Progress</h1>
+                </div>
+                <div class="progress-container">
+                    <!-- Medicine selector -->
+                    <div class="medicine-selector">
+                        <select id="medicineSelector" onchange="loadMedicineProgress(this.value)">
+                            <option value="">Select Medicine</option>
+                        </select>
+                    </div>
+
+                    <!-- Calendar view -->
+                    <div id="progressCalendar" class="calendar-view">
+                        <!-- Calendar will be rendered here -->
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="progress-legend">
+                        <div class="legend-item">
+                            <div class="status-dot taken"></div>
+                            <span>Taken</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="status-dot missed"></div>
+                            <span>Missed</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="status-dot skipped"></div>
+                            <span>Skipped</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="status-dot not-due"></div>
+                            <span>Not Due</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Screen -->
+            <section id="settings-screen" class="screen">
+                <div class="screen-header">
+                    <h1>Settings</h1>
+                </div>
+                <div class="settings-content">
+                    <!-- User Profile -->
+                    <div class="settings-section">
+                        <h2>User Profile</h2>
+                        <div class="settings-item">
+                            <label>Name</label>
+                            <p id="settingsName"></p>
+                        </div>
+                        <div class="settings-item">
+                            <label>Age</label>
+                            <p id="settingsAge"></p>
+                        </div>
+                        <button class="btn-secondary" onclick="editProfile()">Edit Profile</button>
+                    </div>
+
+                    <!-- App Language Settings -->
+                    <div class="settings-section">
+                        <h2>App Language</h2>
+                        <div class="settings-item">
+                            <label for="settingsLanguage">App Language</label>
+                            <select id="settingsLanguage" onchange="updateLanguage(this.value)">
+                                <option value="english">🇬🇧 English</option>
+                                <option value="spanish">🇪🇸 Spanish</option>
+                                <option value="french">🇫🇷 French</option>
+                                <option value="german">🇩🇪 German</option>
+                                <option value="hindi">🇮🇳 Hindi</option>
+                                <option value="gujarati">🇮🇳 Gujarati</option>
+                                <option value="marathi">🇮🇳 Marathi</option>
+                                <option value="tamil">🇮🇳 Tamil</option>
+                                <option value="telugu">🇮🇳 Telugu</option>
+                            </select>
+                            <div class="help-text">Changes the entire app interface language</div>
+                        </div>
+                    </div>
+
+                    <!-- Voice Settings -->
+                    <div class="settings-section">
+                        <h2>Voice & Sound</h2>
+                        <div class="settings-item">
+                            <label for="settingsVoiceGender">Voice Gender for Reminders</label>
+                            <select id="settingsVoiceGender" onchange="updateVoice(this.value)">
+                                <option value="male">👨 Male</option>
+                                <option value="female">👩 Female</option>
+                                <option value="neutral">🔊 Neutral</option>
+                            </select>
+                            <div class="help-text">Choose male or female voice for medication reminders</div>
+                        </div>
+                        <div class="settings-item">
+                            <label for="settingsVoiceLanguage">Voice Language for Reminders</label>
+                            <select id="settingsVoiceLanguage" onchange="updateVoiceLanguage(this.value)">
+                                <option value="">Same as App Language</option>
+                                <option value="english">English</option>
+                                <option value="hindi">Hindi</option>
+                                <option value="tamil">Tamil</option>
+                                <option value="telugu">Telugu</option>
+                                <option value="spanish">Spanish</option>
+                                <option value="french">French</option>
+                                <option value="german">German</option>
+                                <option value="gujarati">Gujarati</option>
+                                <option value="marathi">Marathi</option>
+                                <option value="chinese">Chinese</option>
+                                <option value="japanese">Japanese</option>
+                            </select>
+                            <div class="help-text" style="font-size: 12px; color: #999; margin-top: 5px;">Select a specific language for voice reminders. Leave empty to use app language.</div>
+                        </div>
+                        <div class="settings-item">
+                            <label for="volumeLevel">Volume Level</label>
+                            <select id="volumeLevel" onchange="updateVolume(this.value)">
+                                <option value="low">Low</option>
+                                <option value="normal">Normal</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Voice Test -->
+                    <div class="settings-section">
+                        <h2>Voice Test</h2>
+                        <button class="btn-secondary" onclick="testVoiceReminder()">🔊 Test Voice Reminder</button>
+                        <p style="font-size: 12px; color: #999; margin-top: 10px;">Click to hear how your reminder will sound with current voice settings</p>
+                    </div>
+
+                    <!-- Accessibility -->
+                    <div class="settings-section">
+                        <h2>Accessibility</h2>
+                        <div class="settings-item checkbox">
+                            <input type="checkbox" id="largeText" onchange="updateAccessibility()">
+                            <label for="largeText">Larger Text Size</label>
+                        </div>
+                        <div class="settings-item checkbox">
+                            <input type="checkbox" id="highContrast" onchange="updateAccessibility()">
+                            <label for="highContrast">High Contrast Mode</label>
+                        </div>
+                        <div class="settings-item checkbox">
+                            <input type="checkbox" id="vibration" onchange="updateAccessibility()" checked>
+                            <label for="vibration">Vibration Alerts</label>
+                        </div>
+                    </div>
+
+                    <!-- Data Management -->
+                    <div class="settings-section">
+                        <h2>Data Management</h2>
+                        <button class="btn-secondary" onclick="exportData()">Export Data</button>
+                        <button class="btn-danger" onclick="clearAllData()">Clear All Data</button>
+                    </div>
+
+                    <!-- About -->
+                    <div class="settings-section">
+                        <h2>About</h2>
+                        <p>Health Guardian v1.0</p>
+                        <p>Smart Medication Management System</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-screen="home-screen" onclick="switchScreen('home-screen')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Home</span>
+            </button>
+            <button class="nav-btn" data-screen="medicines-screen" onclick="switchScreen('medicines-screen')">
+                <span class="nav-icon">💊</span>
+                <span class="nav-label">Medicines</span>
+            </button>
+            <button class="nav-btn" data-screen="progress-screen" onclick="switchScreen('progress-screen')">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Progress</span>
+            </button>
+            <button class="nav-btn" data-screen="settings-screen" onclick="switchScreen('settings-screen')">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-label">Settings</span>
+            </button>
+        </nav>
+
+        <!-- Reminder Modal -->
+        <div id="reminderModal" class="modal">
+            <div class="reminder-content">
+                <button class="close-btn" onclick="closeReminder()">×</button>
+                <div class="reminder-icon">🔔</div>
+                <h2>Time to Take Your Medicine</h2>
+                <div class="medicine-reminder-details">
+                    <img id="reminderImage" src="" alt="Medicine">
+                    <div class="reminder-info">
+                        <h3 id="reminderName"></h3>
+                        <p id="reminderDosage"></p>
+                        <p id="reminderInstruction"></p>
+                    </div>
+                </div>
+                <div class="reminder-audio">
+                    <audio id="reminderAudio" autoplay loop></audio>
+                </div>
+                <div class="reminder-buttons">
+                    <button class="btn-success" onclick="markAsDone()">✓ Done</button>
+                    <button class="btn-secondary" onclick="remindLater()">⏰ Remind Later</button>
+                    <button class="btn-danger" onclick="markAsSkipped()">✕ Skip</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Profile Modal -->
+        <div id="editProfileModal" class="modal">
+            <div class="modal-content" style="max-width: 500px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>Edit Profile</h2>
+                    <button class="close-btn" onclick="closeEditProfile()" style="position: static;">×</button>
+                </div>
+                <form id="editProfileForm" onsubmit="saveProfile(event)">
+                    <div class="form-group">
+                        <label for="editName">Full Name</label>
+                        <input type="text" id="editName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editAge">Age</label>
+                        <input type="number" id="editAge" min="1" max="150" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editGender">Gender</label>
+                        <select id="editGender">
+                            <option value="">Select or skip</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="prefer-not">Prefer not to say</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" class="btn-secondary" onclick="closeEditProfile()" style="flex: 1;">Cancel</button>
+                        <button type="submit" class="btn-primary" style="flex: 1;">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data-manager.js"></script>
+    <script src="js/reminder-system.js"></script>
+    <script src="app-main.js"></script>
+</body>
+</html>

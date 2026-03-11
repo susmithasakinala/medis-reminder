@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Guardian - Smart Medication Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .logo {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 50px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .features {
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .features h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            color: #666;
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .logo {
+                font-size: 60px;
+            }
+
+            p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🩺</div>
+        <h1>Health Guardian</h1>
+        <p>Smart Medication Management System</p>
+        <p>Your personal medication reminder assistant. Never miss a dose again.</p>
+        
+        <button class="button" onclick="startApp()">Launch App</button>
+        
+        <div class="features">
+            <h3>Key Features:</h3>
+            <ul class="feature-list">
+                <li>Visual medicine identification</li>
+                <li>Voice-assisted reminders in multiple languages</li>
+                <li>Flexible scheduling (daily, weekly, monthly, custom cycles)</li>
+                <li>Daily progress tracking with calendar view</li>
+                <li>Accessibility options for elderly users</li>
+                <li>Offline support</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function startApp() {
+            // Check if user is registered
+            const userRegistered = localStorage.getItem('healthGuardianUser');
+            if (userRegistered) {
+                window.location.href = 'app.html';
+            } else {
+                window.location.href = 'registration.html';
+            }
+        }
+
+        // Auto-start app if already registered
+        window.addEventListener('load', () => {
+            const userRegistered = localStorage.getItem('healthGuardianUser');
+            if (userRegistered) {
+                setTimeout(() => {
+                    window.location.href = 'app.html';
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+{
+  "name": "health-guardian",
+  "version": "1.0.0",
+  "description": "Smart Medication Management System - Voice-assisted reminders, flexible scheduling, and progress tracking",
+  "type": "module",
+  "main": "app-main.js",
+  "scripts": {
+    "start": "Open index.html in your web browser"
+  },
+  "keywords": [
+    "medication",
+    "health",
+    "reminder",
+    "management",
+    "accessibility",
+    "voice",
+    "healthcare"
+  ],
+  "author": "Health Guardian Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/health-guardian"
+  },
+  "technologies": {
+    "frontend": "HTML5, CSS3, Vanilla JavaScript",
+    "storage": "Browser LocalStorage",
+    "voice": "Web Speech API",
+    "notifications": "Web Notifications API",
+    "compatibility": "Modern browsers (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+)"
+  },
+  "features": [
+    "User onboarding with personalization",
+    "Medicine management with photo upload",
+    "Flexible scheduling (daily, weekly, monthly, custom cycles)",
+    "Voice-assisted reminders in 11 languages",
+    "Full-screen reminder alerts",
+    "Daily progress tracking with calendar view",
+    "Accessibility options (large text, high contrast, vibration)",
+    "Settings and preferences management",
+    "Data export and backup",
+    "Completely offline functionality",
+    "Mobile responsive design"
+  ],
+  "fileStructure": {
+    "root": [
+      "index.html - Landing page",
+      "registration.html - User onboarding",
+      "app.html - Main application",
+      "app.js - Registration logic",
+      "app-main.js - Main app controller",
+      "README.md - Full documentation",
+      "QUICKSTART.md - Quick start guide",
+      "package.json - This file"
+    ],
+    "styles": [
+      "main.css - All styling (responsive, animations, themes)"
+    ],
+    "js": [
+      "data-manager.js - Data management and localStorage",
+      "reminder-system.js - Reminders and notifications"
+    ],
+    "assets": [
+      "placeholder.svg - Default medicine image"
+    ]
+  },
+  "supportedLanguages": [
+    "English (en-US)",
+    "Spanish (es-ES)",
+    "French (fr-FR)",
+    "German (de-DE)",
+    "Hindi (hi-IN)",
+    "Gujarati (gu-IN)",
+    "Marathi (mr-IN)",
+    "Tamil (ta-IN)",
+    "Telugu (te-IN)",
+    "Chinese Simplified (zh-CN)",
+    "Japanese (ja-JP)"
+  ],
+  "medicineDosageUnits": [
+    "mg (Milligrams)",
+    "ml (Milliliters)",
+    "Tablet(s)",
+    "Capsule(s)",
+    "Drop(s)",
+    "Spray"
+  ],
+  "intakeInstructions": [
+    "Before Meal",
+    "After Meal",
+    "With Meal",
+    "Empty Stomach",
+    "Anytime"
+  ],
+  "frequencyOptions": {
+    "daily": "Every day at specified time",
+    "weekly": "On selected days of week",
+    "monthly": "Same date each month",
+    "custom": "Custom intake/pause cycle pattern"
+  },
+  "reminderActions": [
+    "Done - Mark medicine as taken",
+    "Remind Later - Snooze for 15 minutes",
+    "Skip - Mark medicine as skipped"
+  ],
+  "progressStatusColors": {
+    "taken": "Green (#27ae60)",
+    "missed": "Red (#e74c3c)",
+    "skipped": "Yellow (#f39c12)",
+    "notDue": "Gray (#95a5a6)"
+  },
+  "browserRequirements": {
+    "minimumVersions": {
+      "Chrome": "90+",
+      "Firefox": "88+",
+      "Safari": "14+",
+      "Edge": "90+"
+    },
+    "features": [
+      "localStorage API",
+      "Web Speech API (for voice)",
+      "Web Notifications API",
+      "FileReader API (for image upload)"
+    ]
+  },
+  "dataStructure": {
+    "user": {
+      "fullName": "string",
+      "age": "number",
+      "gender": "string",
+      "language": "string",
+      "voiceGender": "string",
+      "volumeLevel": "string",
+      "registrationDate": "ISO string"
+    },
+    "medicine": {
+      "id": "timestamp string",
+      "name": "string",
+      "dosageAmount": "number",
+      "dosageUnit": "string",
+      "intakeInstruction": "string",
+      "intakeTime": "HH:MM",
+      "startDate": "YYYY-MM-DD",
+      "endDate": "YYYY-MM-DD or empty",
+      "frequency": "daily|weekly|monthly|custom",
+      "selectedDays": "array (for weekly)",
+      "intakeDays": "number (for custom)",
+      "pauseDays": "number (for custom)",
+      "photoData": "base64 string or URL",
+      "notes": "string",
+      "createdAt": "ISO string"
+    },
+    "progress": {
+      "medicineId": {
+        "YYYY-MM-DD": "taken|missed|skipped"
+      }
+    },
+    "settings": {
+      "language": "string",
+      "voiceGender": "string",
+      "volumeLevel": "string",
+      "largeText": "boolean",
+      "highContrast": "boolean",
+      "vibration": "boolean"
+    }
+  },
+  "development": {
+    "noBackendRequired": true,
+    "offlineCapable": true,
+    "mobileOptimized": true,
+    "responsiveDesign": true,
+    "localStorageUsage": "Typical: 1-5 MB per user",
+    "databaseRequired": false
+  },
+  "performance": {
+    "pageLoadTime": "< 1 second",
+    "appSize": "< 500 KB",
+    "requiredInternetForFeatures": "Voice synthesis only"
+  }
+}
